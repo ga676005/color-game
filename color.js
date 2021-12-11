@@ -1,8 +1,26 @@
 /* eslint-disable prefer-const */
 import { randomNumber } from './util.js'
 
-export function getColorStrings() {
-  const [r, g, b] = generateRandomRGBValue()
+export const DIFFICULTY = {
+  EASY: 60,
+  MEDIUM: 40,
+  HARD: 20,
+}
+
+export function createColorsWithRange({ targetColor, number, range }) {
+  const colors = Array.from({ length: number }, () => {
+    return generateRandomRGBValueWithRange({
+      r: targetColor.r,
+      g: targetColor.g,
+      b: targetColor.b,
+      range,
+    })
+  })
+
+  return colors
+}
+
+export function formatColorStrings({ r, g, b } = {}) {
   const rgb = RGBNumberToString(r, g, b)
   const hex = RGBToHex(r, g, b)
   const hsl = RGBToHSL(r, g, b)
@@ -11,16 +29,17 @@ export function getColorStrings() {
 }
 
 export function generateRandomRGBValue() {
-  const r = randomRBG()
-  const g = randomRBG()
-  const b = randomRBG()
+  const r = randomRBGSingleNumber()
+  const g = randomRBGSingleNumber()
+  const b = randomRBGSingleNumber()
   return { r, g, b }
 }
 
-export function generateRandomRGBValueWithinRange({ r, g, b, range } = {}) {
-  const _r = randomRBG(r - range, r + range)
-  const _g = randomRBG(g - range, g + range)
-  const _b = randomRBG(b - range, b + range)
+export function generateRandomRGBValueWithRange({ r, g, b, range } = {}) {
+  const _r = randomRGBWithRange(r, range)
+  const _g = randomRGBWithRange(g, range)
+  const _b = randomRGBWithRange(b, range)
+
   return { r: _r, g: _g, b: _b }
 }
 
@@ -88,7 +107,16 @@ function RGBToHSL(r, g, b) {
   return `hsl("${h},${s}%,${l}%")`
 }
 
-function randomRBG(min = 0, max = 255) {
+function randomRGBWithRange(value, range) {
+  const randomness = Math.round(Math.random())
+
+  if (randomness === 1)
+    return randomRBGSingleNumber(value - range, value - (2 * range))
+  if (randomness === 0)
+    return randomRBGSingleNumber(value + range, value + (2 * range))
+}
+
+function randomRBGSingleNumber(min = 0, max = 255) {
   min = min < 0 ? 0 : min
   max = max > 255 ? 255 : max
   return randomNumber(min, max)
