@@ -2,11 +2,11 @@
 import { shuffle } from 'lodash-es'
 
 import './styles.css'
+import formatRGBToCSSColor from './formatRGBToCSSColor.js'
 import {
   DIFFICULTY,
   generateRandomRGBValue,
   createColorsWithRange,
-  formatColorStrings,
 } from './color.js'
 
 const targetColorDisplay = document.querySelector('[data-target-color]')
@@ -67,7 +67,7 @@ function initGame() {
 }
 
 function saveFormattedColorStringsInElement(element, values) {
-  const { rgb, hex, hsl } = formatColorStrings(values)
+  const { rgb, hex, hsl } = formatRGBToCSSColor(values)
   element.dataset.rgb = rgb
   element.dataset.hex = hex
   element.dataset.hsl = hsl
